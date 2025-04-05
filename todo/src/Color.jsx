@@ -1,44 +1,82 @@
-import React from "react";
-import { useState } from "react";
-
-const Colors = ["blue", "red", "green"];
+import React, { useEffect, useState } from "react";
 
 export default function Color() {
-  const [answerColor, setAnswerColor] = useState("blue");
-  const [isAnswer, setIsAnswer] = useState(false);
-  function handleCheck(color) {
-    if (color === answerColor) {
-      setIsAnswer(true);
-      console.log(isAnswer);
-    } else {
-      setIsAnswer(false);
-    }
-  }
+  const [color, setColor] = useState("");
+  const [answers, setAnswers] = useState([]);
+  const numbers = array.filter((number) => {
+    return number >= 5;
+  });
 
+  console.log(numbers)
+  const getColor = () => {
+    const hexArray = [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+    ];
+
+    const newColor = new Array(6)
+      .fill("")
+      .map(() => hexArray[Math.ceil(Math.random() * hexArray.length)])
+      .join("");
+    return `#${newColor}`;
+  };
+  useEffect(() => {
+    const actualColor = getColor();
+    setColor(actualColor);
+    setAnswers(
+      [actualColor, getColor(), getColor()].sort(() => 0.5 - Math.random())
+    );
+
+    //Caching -> store the fucntion , not reruins,
+  }, []);
+
+  const handleAnswerClick = (answer) => {
+    if (answer === color) {
+      setIsAnswer();
+    }
+  };
   return (
-    <div>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        width: "100px",
+        justifyContent: "center",
+      }}
+    >
       <div
-        className="bigColor"
+        className="box"
         style={{
-          width: "100px",
-          height: "100px",
-          backgroundColor: answerColor,
+          backgroundColor: `${color}`,
+          width: "400px",
+          height: "400px",
         }}
       ></div>
-
-      <div className="buttons">
-        {Colors.map((color, colorID) => (
-          <button
-            key={colorID}
-            onClick={() => {
-              handleCheck(color);
-            }}
-          >
-            {color}
-          </button>
-        ))}
+      <div style={{ display: "flex", flexDirection: "row", gap: "10px" }}>
+        {answers.map((value, index) => {
+          return (
+            <button onClick={handleAnswerClick(value)} key={index}>
+              {" "}
+              {value}
+            </button>
+          );
+        })}
       </div>
-      {isAnswer && <p>Correct Color!</p>}
+      {}
     </div>
   );
 }
